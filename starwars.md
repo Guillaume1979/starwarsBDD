@@ -11,11 +11,12 @@ drop table if exists species;
 drop table if exists language;
 drop table if exists designation;
 drop table if exists classification;
+drop table if exists climate_planets;
+drop table if exists terrain_planets;
 drop table if exists planets;
 drop table if exists terrain;
 drop table if exists climate;
 drop table if exists gender;
-
 
 
 create table gender(
@@ -46,13 +47,27 @@ create table planets(
     diameter int,
     gravity_in_standard float,
     surface_water float,
-    population double precision,
-    climate_idx int
-                    constraint climate_fk
-                    references climate,
-    terrain_idx int
-                    constraint terrain_fk
-                    references terrain
+    population double precision
+);
+
+create table terrain_planets(
+    id_terrain_idx int
+                            constraint terrain_fk
+                            references terrain,
+    id_planet_idx int
+                            constraint planet_fk
+                            references planets,
+    primary key (id_planet_idx,id_terrain_idx)
+);
+
+create table climate_planets(
+    id_climate_idx int
+                            constraint climate_fk
+                            references climate,
+    id_planet_idx int
+                            constraint planet_fk
+                            references planets,
+    primary key (id_planet_idx,id_climate_idx)
 );
 
 --- species ---
@@ -88,9 +103,10 @@ create table species(
                     references language,
     homeworld_idx int
                     constraint homeworld_fk
-                    references planets
-
-
+                    references planets,
+    designation_idx int
+                    constraint designation_fk
+                    references designation
 );
 
 create type body_attribute as enum ('skin','hair','eyes');
